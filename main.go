@@ -6,9 +6,12 @@ import (
 	"project/handlers"
 	"project/middleware"
 	"project/storage"
+	"project/logger"
 )
 
 func main() {
+
+	logger.Init(true)
 
 	st := &storage.UserStorage{
 		FileName: "data/users.json",

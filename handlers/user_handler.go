@@ -3,10 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"project/logger"
 	"project/models"
 	"project/storage"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 type UserHandler struct {
@@ -45,12 +48,22 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil{
+		logger.L.Error(
+			"failed to decode user",
+			zap.Error(err),
+		)
+
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.Storage.Create(user)
 	if err != nil{
+		logger.L.Error(
+			"failed to create user",
+			zap.Error(err),
+		)
+
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
